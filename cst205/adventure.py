@@ -10,25 +10,69 @@
 # Start of class defintions
 #####
 
-class Map:
+# new state class to track win/loss states, may eventually use state to track current location within the game
+class State:
 
   def __init__(self):
-    self.map = makeEmptyPicture(400, 300, black)
-    self.rooms = {}
-
-  def show_map(self):
-    self.map.repaint()
+    self.win_states = {}
+    self.loss_states = {}
     
-  def add_room(self, room, x_start, y_start):
+  def add_win_state(self, room, item):
+    self.win_states[room] = item
+    
+  def add_loss_state(self, room, item):
+    self.loss_states[room] = item
+    
+  def check_for_win(self, room):
+    has_won = false
+    if room in self.win_states:
+      winning_item = self.win_states[room]
+      if winning_item == '' or winning_item in room.player_inventory:
+        has_won = true
+    
+    return has_won
+      
+      
+  def check_for_loss(self, room):
+    has_lost = false
+    if room in self.loss_states:
+      losing_item = self.loss_states[room]
+      if losing_item == ''or losing_item in room.player_inventory:
+        has_lost = true
+    
+    return has_lost
+      
+# this is mostly complete, waiting on actual images instead of just black/white squares
+class Map:
+
+  def __init__(self, levels=1):
+    self.maps = {}  
+    for level in range(0, levels):
+      self.maps[level + 1] = makeEmptyPicture(800, 600, black)
+    self.map = self.maps[1] # start on the first level
+    self.rooms = {}
+    
+
+  def show_map(self, room):
+    if room in self.rooms:
+      self.get_map(room).repaint()
+    
+  def add_room(self, room, level, x_start, y_start):
     self.rooms[room] = {}
+    self.rooms[room]['level'] = level
     self.rooms[room]['x_start'] = x_start
     self.rooms[room]['y_start'] = y_start
-    
+  
+  # currently unused
   def update_map(self):
     for room in self.rooms.keys():
       if room.is_entered:
         printNow("Drawing %s" % room)
         self.draw_room(room)
+        
+  def get_map(self, room):
+    self.map = self.maps[self.rooms[room]['level']]
+    return self.map
         
   def draw_room(self, room):
     if 'file' in room.image:
@@ -40,8 +84,9 @@ class Map:
         y_offset = self.rooms[room]['y_start']
         for x in range(x_offset, x_offset + room.image['width']):
           for y in range(y_offset, y_offset + room.image['height']):
-            #printNow("x: %d, y: %d" % (x,y))
-            setColor(getPixel(self.map, x, y), white)
+            setColor(getPixel(self.get_map(room), x, y), white)
+        
+        self.show_map(room)
             
   def draw_player(self, room):
     if room in self.rooms and 'x_start' in self.rooms[room] and 'x_start' in self.rooms[room]:
@@ -53,9 +98,12 @@ class Map:
       start_x = int((2 * x_offset + room.image['width'] - width) / 2)
       start_y = int((2 * y_offset + room.image['height'] - height) / 2)
       
-      printNow("x offset: %d y offset: %d room width: %d room height: %d start x: %d start y: %d" % (x_offset, y_offset, room.image['width'], room.image['height'], start_x, start_y))
+      #debug only
+      #printNow("draw player at start x: %d start y: %d on level %d" % (start_x, start_y, self.rooms[room]['level']))
 
-      addOvalFilled(self.map, start_x, start_y, width, height, red)
+      addOvalFilled(self.get_map(room), start_x, start_y, width, height, red)
+      
+      self.show_map(room)
       
   def erase_player(self, room):
     if room in self.rooms and 'x_start' in self.rooms[room] and 'x_start' in self.rooms[room]:
@@ -66,9 +114,22 @@ class Map:
       height = 20
       start_x = int((2 * x_offset + room.image['width'] - width) / 2)
       start_y = int((2 * y_offset + room.image['height'] - height) / 2)
-
-      addOvalFilled(self.map, start_x, start_y, width, height, white)
-
+      
+      #debug only
+      #printNow("erase player at start x: %d start y: %d on level %d" % (start_x, start_y, self.rooms[room]['level']))
+      
+      addOvalFilled(self.get_map(room), start_x, start_y, width, height, white)
+      
+      self.show_map(room)
+      
+  def enter_room(self, room):
+    if not room.is_entered:
+       room.is_entered = true
+       self.draw_room(room)  
+    self.draw_player(room)
+  
+  def leave_room(self, room):
+    self.erase_player(room)
 
 # '''
 # The Room class defines an abstraction for one of the core entities in this adventure game: the rooms which make up the map of the game's world.
@@ -155,6 +216,8 @@ class Room:
     if img_file:
       self.image['file'] = img_file
     
+    # these eventually will be derived from the supplied image, unless it ends up more
+    # useful to derive these direct from the pic object
     self.image['width'] = width
     self.image['height'] = height
   
@@ -594,7 +657,7 @@ def startGame():
   secret_roomDescriber = 'The room is pitch black but there seems to be something giving off a faint light in the corner. ' 
   
   # create a map for the world
-  world = Map()  
+  world = Map(levels=2)  
         
   # build the rooms in this world
   entrance = Room('Entrance', entranceDescriber)
@@ -608,15 +671,15 @@ def startGame():
   secret_room = Room('Secret Room', secret_roomDescriber)
   
   # add room images
-  entrance.add_image(height=100, width=100)
-  entrance_room.add_image(height=100, width=100)
-  dining_room.add_image(height=100, width=100)
-  kitchen.add_image(height=100, width=100)
-  stairwell.add_image(height=100, width=100)
-  hallway.add_image(height=100, width=300)
-  dungeon.add_image(height=100, width=100)
-  loot_room.add_image(height=100, width=200)
-  secret_room.add_image(height=100, width=100)
+  entrance.add_image(height=200, width=200)
+  entrance_room.add_image(height=200, width=200)
+  dining_room.add_image(height=200, width=200)
+  kitchen.add_image(height=200, width=200)
+  stairwell.add_image(height=200, width=200)
+  hallway.add_image(height=200, width=600)
+  dungeon.add_image(height=200, width=200)
+  loot_room.add_image(height=200, width=400)
+  secret_room.add_image(height=200, width=200)
     
   # now, add navigation between the rooms
   entrance.add_nav('south', entrance_room)
@@ -637,13 +700,15 @@ def startGame():
   dungeon.add_nav('north', hallway)
   
   # add rooms to the map
-  world.add_room(entrance, 0, 0)
-  world.add_room(entrance_room, 0, 100)
-  world.add_room(hallway, 100, 100)
-  world.add_room(dining_room, 0, 200)
-  world.add_room(kitchen, 100, 200)
-  world.add_room(loot_room, 200, 0)
-  world.add_room(dungeon, 300, 200)
+  world.add_room(entrance, 1, 0, 0)
+  world.add_room(entrance_room, 1, 0, 200)
+  world.add_room(hallway, 1, 200, 200)
+  world.add_room(dining_room, 1, 0, 400)
+  world.add_room(kitchen, 1, 200, 400)
+  world.add_room(loot_room, 1, 400, 0) 
+  world.add_room(dungeon, 1, 600, 400)
+  world.add_room(stairwell, 1, 400, 400)
+  world.add_room(secret_room, 2, 600, 400)
   
   # create and place inventory items
   key = Item('Key', 'unowned')
@@ -659,15 +724,22 @@ def startGame():
   grail.add_action('get', 'unowned')
   chest.insert_item(grail)
   loot_room.add_object(chest)
+  
+  
+  # finally, setup win/loss conditions
+  adventure = State()
+  adventure.add_win_state(loot_room, grail)
+  adventure.add_loss_state(dungeon, '')
     
   playername=requestString("What is your name?")
   printWelcome(playername)
    
   # start game at the entrance
   currentRoom = entrance
+  currentRoom.is_entered = true
   world.draw_room(currentRoom)
   world.draw_player(currentRoom)
-  world.show_map()
+  #world.show_map(currentRoom)
   
   command = ''
   
@@ -689,20 +761,21 @@ def startGame():
     if tryRoomMove:
       newRoom = moveRooms(command, currentRoom)
       if newRoom:
-        if not newRoom.is_entered:
-          newRoom.is_entered = true
-          world.draw_room(newRoom)
-        world.erase_player(currentRoom)
-        world.draw_player(newRoom)
-        currentRoom = newRoom
-        
+        world.leave_room(currentRoom)
+        world.enter_room(newRoom)
+        currentRoom = newRoom      
       else:
         printError()
     
     #may deprecate this in favor of world.draw_room()
     #world.update_map()
     
-    world.show_map()
+    #world.show_map(currentRoom)
+    
+    if adventure.check_for_win(currentRoom):
+      printNow("Won!")
+    if adventure.check_for_loss(currentRoom):
+      printNow("Lost!")
         
     #check for win/loss
     if currentRoom.lose_game(playername):
@@ -711,7 +784,7 @@ def startGame():
       break   
                   
   #clean-up here
-  world.show_map()
+  world.show_map(currentRoom)
   
   #clear player's inventory     
   Room.player_inventory = []
