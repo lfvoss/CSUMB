@@ -678,9 +678,10 @@ def startGame():
     currentRoom.show_moves()
     currentRoom.show_objects()
     currentRoom.show_inventory()
-         
-    for room in world.rooms:
-      printNow("Room: %s Is Entered: %s" % (room, room.is_entered))
+    
+    #debug only
+    #for room in world.rooms:
+    #  printNow("Room: %s Is Entered: %s" % (room, room.is_entered))
     
     command = getCommand()
     tryRoomMove = processCommand(command, currentRoom, playername)
