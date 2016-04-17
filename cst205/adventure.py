@@ -81,7 +81,7 @@ class Map:
     
       if 'file' in room.image:
         #in this section we will paint the image
-        printNow("printing room image to map")
+        #debug: printNow("printing room image to map")
         
         if not 'image' in self.rooms[room]:
           self.rooms[room]['image'] =  makePicture(room.image['file'])
@@ -356,8 +356,10 @@ class Room:
   def show_inventory(self):
     if len(self.player_inventory) > 0:
       printNow("You are holding the following items: ")
-    for item in self.player_inventory:
-      printNow(item)
+      for item in self.player_inventory:
+        printNow(item)
+    else:
+      printNow("You have no items in your inventory")
 
 
   # '''
@@ -456,9 +458,11 @@ class Item:
   # '''
   def show_contents(self):
     if len(self.contents) > 0:
-      printNow("You see the following items inside the %s:" % self)
+      info = "You see the following items in the %s:" % self
       for item in self.contents:
-        printNow(item)
+        info += "\n%s" % item
+        
+    showInformation(info)
 
 
   # '''
@@ -473,6 +477,8 @@ class Item:
   # '''
   def take_action(self, action):
     #debug: printNow("Attempting to " + action + " " + self.name)
+    
+    action = action.lower()
     
     if action in self.protected_actions:
       if self.protected_actions[action] not in Room.player_inventory:
@@ -491,7 +497,7 @@ class Item:
           self.state = 'opened'
         elif action == 'close':
           self.state = 'closed'
-        elif action == 'inspect':
+        elif action in ['inspect', 'look']:
           self.show_contents()
         return True
       else:
@@ -562,7 +568,7 @@ def processCommand(command, room, name):
                      'inventory',
                      'exit', 'help')
   
-  compound_commands = ('open', 'close', 'drink', 'take', 'get', 'lock', 'unlock', 'inspect')
+  compound_commands = ('open', 'close', 'drink', 'take', 'get', 'lock', 'unlock', 'inspect', 'look')
   
   noun = ''
   verb = ''
@@ -664,7 +670,7 @@ def moveRooms(direction, room):
 def startGame():
 
   rootFolder = os.path.dirname(os.path.abspath(startGame.func_code.co_filename))
-  printNow(rootFolder)
+  #debug: printNow(rootFolder)
  
   # these are the descriptions for each room 
   entranceDescriber = 'Ahead of you lies a large wooden gate. The gate seems to be unlocked.'
@@ -739,7 +745,12 @@ def startGame():
   # create and place inventory items
   key = Item('Key', 'unowned')
   key.add_action('get', 'unowned')
-  secret_room.add_object(key)
+  
+  # corner is an abstract item, that acts as an opened container for the key
+  corner = Item('Corner', 'opened')
+  corner.add_action('inspect', 'opened')
+  corner.insert_item(key)
+  secret_room.add_object(corner)
   
   chest = Item('Chest', 'locked')
   chest.add_action('unlock','locked')
@@ -774,8 +785,10 @@ def startGame():
     currentRoom.show_room()
     currentRoom.show_description()
     currentRoom.show_moves()
-    currentRoom.show_objects()
-    currentRoom.show_inventory()
+    
+    #in previous versions, these were displayed automatically
+    #currentRoom.show_objects()
+    #currentRoom.show_inventory()
     
     #debug only
     #for room in world.rooms:
