@@ -48,7 +48,7 @@ class Map:
   def __init__(self, levels=1):
     self.maps = {}  
     for level in range(0, levels):
-      self.maps[level + 1] = makeEmptyPicture(800, 600, black)
+      self.maps[level + 1] = makeEmptyPicture(300, 500, black)
     self.map = self.maps[1] # start on the first level
     self.rooms = {}
     
@@ -75,16 +75,29 @@ class Map:
     return self.map
         
   def draw_room(self, room):
-    if 'file' in room.image:
-      #in this section we will paint the image
-      printNow("printing room image to map")
-    else:
-      if room in self.rooms and 'x_start' in self.rooms[room] and 'x_start' in self.rooms[room]:
-        x_offset = self.rooms[room]['x_start']
-        y_offset = self.rooms[room]['y_start']
-        for x in range(x_offset, x_offset + room.image['width']):
-          for y in range(y_offset, y_offset + room.image['height']):
-            setColor(getPixel(self.get_map(room), x, y), white)
+    if room in self.rooms and 'x_start' in self.rooms[room] and 'x_start' in self.rooms[room]:
+      x_offset = self.rooms[room]['x_start']
+      y_offset = self.rooms[room]['y_start']
+    
+      if 'file' in room.image:
+        #in this section we will paint the image
+        printNow("printing room image to map")
+        
+        if not 'image' in self.rooms[room]:
+          self.rooms[room]['image'] =  makePicture(room.image['file'])
+        
+        room_image = self.rooms[room]['image']
+          
+        width = getWidth(room_image)
+        height = getHeight(room_image)
+        
+        self.rooms[room]['width'] = width
+        self.rooms[room]['height'] = height
+        
+        for x in range(x_offset, x_offset + width):
+          for y in range(y_offset, y_offset + height):
+            room_pixel = getPixel(room_image, x - x_offset, y - y_offset)
+            setColor(getPixel(self.get_map(room), x, y), getColor(room_pixel))
         
         self.show_map(room)
             
@@ -95,8 +108,8 @@ class Map:
 
       width = 20
       height = 20
-      start_x = int((2 * x_offset + room.image['width'] - width) / 2)
-      start_y = int((2 * y_offset + room.image['height'] - height) / 2)
+      start_x = int((2 * x_offset + self.rooms[room]['width'] - width) / 2)
+      start_y = int((2 * y_offset + self.rooms[room]['height'] - height) / 2)
       
       #debug only
       #printNow("draw player at start x: %d start y: %d on level %d" % (start_x, start_y, self.rooms[room]['level']))
@@ -112,13 +125,23 @@ class Map:
 
       width = 20
       height = 20
-      start_x = int((2 * x_offset + room.image['width'] - width) / 2)
-      start_y = int((2 * y_offset + room.image['height'] - height) / 2)
+      start_x = int((2 * x_offset + self.rooms[room]['width'] - width) / 2)
+      start_y = int((2 * y_offset + self.rooms[room]['height'] - height) / 2)
       
       #debug only
       #printNow("erase player at start x: %d start y: %d on level %d" % (start_x, start_y, self.rooms[room]['level']))
       
-      addOvalFilled(self.get_map(room), start_x, start_y, width, height, white)
+      # This needs to be fixed to repaint the appropriate part of the room image instead of just white
+      #addOvalFilled(self.get_map(room), start_x, start_y, width, height, white)
+      
+      if 'image' in self.rooms[room]:
+        room_image = self.rooms[room]['image']
+        
+        for x in range(start_x, start_x + width):
+          for y in range(start_y, start_y + height):
+            room_pixel = getPixel(room_image, x - x_offset, y - y_offset)
+            setColor(getPixel(self.get_map(room), x, y), getColor(room_pixel))
+          
       
       self.show_map(room)
       
@@ -639,6 +662,9 @@ def moveRooms(direction, room):
 # Change Log: 2016.04.11 - Request playername before the game starts, used to personalize game play throughout the game.
 # '''  
 def startGame():
+
+  rootFolder = os.path.dirname(os.path.abspath(startGame.func_code.co_filename))
+  printNow(rootFolder)
  
   # these are the descriptions for each room 
   entranceDescriber = 'Ahead of you lies a large wooden gate. The gate seems to be unlocked.'
@@ -671,15 +697,15 @@ def startGame():
   secret_room = Room('Secret Room', secret_roomDescriber)
   
   # add room images
-  entrance.add_image(height=200, width=200)
-  entrance_room.add_image(height=200, width=200)
-  dining_room.add_image(height=200, width=200)
-  kitchen.add_image(height=200, width=200)
-  stairwell.add_image(height=200, width=200)
-  hallway.add_image(height=200, width=600)
-  dungeon.add_image(height=200, width=200)
-  loot_room.add_image(height=200, width=400)
-  secret_room.add_image(height=200, width=200)
+  entrance.add_image(img_file = rootFolder + '/images/Entrance.jpg')
+  entrance_room.add_image(img_file = rootFolder + '/images/Entrance Room.jpg')
+  dining_room.add_image(img_file = rootFolder + '/images/Dining Room.jpg')
+  kitchen.add_image(img_file = rootFolder + '/images/Kitchen.jpg')
+  stairwell.add_image(img_file = rootFolder + '/images/Secret Stairwell.jpg')
+  hallway.add_image(img_file = rootFolder + '/images/Hallway.jpg')
+  dungeon.add_image(img_file = rootFolder + '/images/Dungeon.jpg')
+  loot_room.add_image(img_file = rootFolder + '/images/Loot Room.jpg')
+  secret_room.add_image(img_file = rootFolder + '/images/SecretRoom.jpg')
     
   # now, add navigation between the rooms
   entrance.add_nav('south', entrance_room)
@@ -701,14 +727,14 @@ def startGame():
   
   # add rooms to the map
   world.add_room(entrance, 1, 0, 0)
-  world.add_room(entrance_room, 1, 0, 200)
-  world.add_room(hallway, 1, 200, 200)
-  world.add_room(dining_room, 1, 0, 400)
-  world.add_room(kitchen, 1, 200, 400)
-  world.add_room(loot_room, 1, 400, 0) 
-  world.add_room(dungeon, 1, 600, 400)
-  world.add_room(stairwell, 1, 400, 400)
-  world.add_room(secret_room, 2, 600, 400)
+  world.add_room(entrance_room, 1, 0, 100)
+  world.add_room(hallway, 1, 100, 100)
+  world.add_room(dining_room, 1, 0, 200)
+  world.add_room(kitchen, 1, 100, 300)
+  world.add_room(loot_room, 1, 100, 0) 
+  world.add_room(dungeon, 1, 100, 200)
+  world.add_room(stairwell, 1, 200, 300)
+  world.add_room(secret_room, 2, 200, 400)
   
   # create and place inventory items
   key = Item('Key', 'unowned')
