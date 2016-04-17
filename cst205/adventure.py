@@ -355,11 +355,13 @@ class Room:
   # '''     
   def show_inventory(self):
     if len(self.player_inventory) > 0:
-      printNow("You are holding the following items: ")
+      info = "You are holding the following items: "
       for item in self.player_inventory:
-        printNow(item)
+        info += "\n%s" % item
+      
+      showInformation(info)
     else:
-      printNow("You have no items in your inventory")
+      showInformation("You have no items in your inventory")
 
 
   # '''
