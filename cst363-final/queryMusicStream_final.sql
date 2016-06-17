@@ -51,6 +51,20 @@ and			album.album_id = release.album_id
 and			release.artist_id = artist.artist_id
 order by	subscriber_email, playlist_entry.playlist_id, playlist_entry.playlist_entry_position;
 
+-- Show Highest Rated Songs
+select 		song_title, song_genre, song_rating, song_plays
+from 		song
+where		song_rating = (	
+							select 	max(song_rating)
+							from 	song);
+
+-- Show Most Played Song(s)
+select 		song_title, song_genre, song_rating, song_plays
+from 		song
+where		song_plays = (	
+							select max(song_plays)
+							from song);
+
 
 
 SPOOL OFF

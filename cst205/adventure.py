@@ -459,13 +459,16 @@ class Item:
   # Intended Use: system during game play, used by processCommand()
   # '''
   def show_contents(self):
+    info = ''
     if len(self.contents) > 0:
       info = "You see the following items in the %s:" % self
       for item in self.contents:
         info += "\n%s" % item
-        
-    showInformation(info)
-
+    
+    if info:
+      showInformation(info)
+    else:
+      showInformation("There is nothing in the %s." % self)
 
   # '''
   # Description: Used to take an action on this Item, action contains a string which represents a command that has already been parsed
