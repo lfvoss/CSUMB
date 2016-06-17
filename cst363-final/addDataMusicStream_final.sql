@@ -116,7 +116,7 @@ INSERT INTO PLAYLIST
 INSERT INTO PLAYLIST
 	VALUES(4, 'Workday Commute', 'N');
 INSERT INTO PLAYLIST 
-	VALUES(5, 'My Favorite Pearl Jam', 'N')
+	VALUES(5, 'My Favorite Pearl Jam', 'N');
 	
 INSERT INTO PLAYLIST_ENTRY
 	VALUES(2, 'BDYLRLS', 1); 	
