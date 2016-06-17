@@ -1,5 +1,5 @@
 
-SPOOL C:\Users\wwebster\Desktop\Mod3\JoeS\CSUMB\cst363-final\queryMusicStream_final.txt
+SPOOL queryMusicStream_final.txt
 
 /*
   Authors: Wayne Webster, Joe Sarabia, Lisa Voss, 
@@ -10,9 +10,15 @@ SPOOL C:\Users\wwebster\Desktop\Mod3\JoeS\CSUMB\cst363-final\queryMusicStream_fi
   Examples of multiple ways of generating queries and formatting output
 */
 
-set linesize 255
+set linesize 160
 set pagesize 80
-select song.SONG_TITLE as "Song Title", ARTIST.ARTIST_NAME as "Artist", album.ALBUM_TITLE as "Album Title", song.SONG_GENRE as "Album Genre" from song join album on song.ALBUM_ID = album.ALBUM_ID join Release on release.album_id = album.album_id join ARTIST on artist.artist_id = release.artist_id where song.SONG_GENRE = 'Rock';
+
+select song.SONG_TITLE as "Song Title", ARTIST.ARTIST_NAME as "Artist", album.ALBUM_TITLE as "Album Title", song.SONG_GENRE as "Album Genre" 
+from song 
+join album on song.ALBUM_ID = album.ALBUM_ID 
+join Release on release.album_id = album.album_id 
+join ARTIST on artist.artist_id = release.artist_id 
+where song.SONG_GENRE = 'Rock';
 
 TTITLE CENTER - "Dotify Music Streaming Service";
 
@@ -42,11 +48,11 @@ COLUMN SONG_ALBUM_POSITION HEADING 'SONG |ALBUM |POSITION';
 
 COLUMN ALBUM_ID HEADING 'ALBUM |ID';
 
-COLUMN SONG_TITLE FORMAT A10 WRAP;
+--COLUMN SONG_TITLE FORMAT A10 WRAP;
 
-COLUMN SONG_GENRE FORMAT A15 WRAP;
+--COLUMN SONG_GENRE FORMAT A15 WRAP;
 
-COLUMN SONG_GENRE FORMAT A6 WRAP;
+--COLUMN SONG_GENRE FORMAT A6 WRAP;
 
 SELECT * FROM SONG;
 
@@ -59,11 +65,12 @@ where 		song.album_id = album.album_id
 order by 	album_us_release_date, song.album_id, song_album_position;
 
 
--- "Classic" Rock, release date > 25 years
---select 		song_title as "Song", album_title as "Album", album_us_release_date as "Release Date"
---from 		song, album 
---where 		song.album_id = album.album_id	
---order by 	album_us_release_date, song.album_id, song_album_position;
+--"Classic" Rock, release date > 25 years
+select 		song_title as "Song", album_title as "Album", album_us_release_date as "Release Date", FLOOR((sysdate - album_us_release_date)/365) as "Age"
+from 		song, album 
+where 		song.album_id = album.album_id
+and			(sysdate - album_us_release_date) > (365 * 25)
+order by 	album_us_release_date, song.album_id, song_album_position;
 
 -- Show Playlists
 select 		subscriber_email, playlist_name
