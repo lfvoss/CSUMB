@@ -2,7 +2,7 @@
 SPOOL C:\CST363\addDataMusicStream_final.txt
 
 /*
-  Authors: Joe Sarabia, Lisa Voss, Wayne Webster, Austin Hasemeyer
+  Authors: Joe Sarabia, Lisa Voss, Wayne Webster
   Date: 06/16
   Class: CST363
   Final Project: Add data to Music Streaming DB Entities
@@ -43,9 +43,9 @@ INSERT INTO ALBUM
 INSERT INTO ALBUM
 	VALUES('BDYL006', 'Highway 61 Revisted', '30-Aug-1965');
 INSERT INTO ALBUM
-	VALUES('PRJM025', 'Ten', '27-08-1991');
+	VALUES('PRJM025', 'Ten', '27-Aug-1991');
 INSERT INTO ALBUM
-	VALUES('PRJM050', 'Vs.', '19-10-1993');
+	VALUES('PRJM050', 'Vs.', '19-Oct-1993');
 
 INSERT INTO RELEASE
 	VALUES('CURE076', 'CURE012');
@@ -116,7 +116,7 @@ INSERT INTO PLAYLIST
 INSERT INTO PLAYLIST
 	VALUES(4, 'Workday Commute', 'N');
 INSERT INTO PLAYLIST 
-	VALUES(5, 'My Favorite Pearl Jam', 'N')
+	VALUES(5, 'Pearl Jam Jams', 'N');
 	
 INSERT INTO PLAYLIST_ENTRY
 	VALUES(2, 'BDYLRLS', 1); 	

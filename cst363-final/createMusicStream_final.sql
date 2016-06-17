@@ -2,7 +2,7 @@
 SPOOL C:\CST363_MySQL\createMusicStream_final.txt
 
 /*
-  Authors: Joe Sarabia, Lisa Voss, Wayne Webster, Austin Hasemeyer
+  Authors: Joe Sarabia, Lisa Voss, Wayne Webster
   Date: 06/16
   Class: CST363
   Final Project: Create Tables / Music Streaming DB Entities
