@@ -108,7 +108,7 @@ ACCEPT vDotify_Song PROMPT 'Please enter a song to play: ';
 
 PROMPT Thank you!
 
-SELECT  'Now playing: ', SONG_TITLE
+SELECT  'Now playing: ', SONG_TITLE || ' by ' || ARTIST_NAME || ' from the album ' || ALBUM_TITLE
 FROM ARTIST JOIN RELEASE USING (ARTIST_ID) JOIN ALBUM USING (ALBUM_ID) JOIN SONG USING (ALBUM_ID)
 WHERE SONG_TITLE = '&vDotify_song';
 
