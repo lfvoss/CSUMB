@@ -7,11 +7,12 @@ SPOOL queryMusicStream_final.txt
   Class: CST363
   Final Project: Query Music Streaming DB Entities
   Instructor: Dr. Wendy Wang
-  Examples of multiple ways of generating queries and formatting output
 */
 
-set linesize 160
-set pagesize 80
+--  Examples of multiple ways of generating queries and formatting output
+
+set linesize 160;
+set pagesize 100;
 
 select song.SONG_TITLE as "Song Title", ARTIST.ARTIST_NAME as "Artist", album.ALBUM_TITLE as "Album Title", song.SONG_GENRE as "Album Genre" 
 from song 
@@ -20,7 +21,9 @@ join Release on release.album_id = album.album_id
 join ARTIST on artist.artist_id = release.artist_id 
 where song.SONG_GENRE = 'Rock';
 
-TTITLE CENTER - "Dotify Music Streaming Service";
+TTITLE LEFT - "Dotify Music Streaming Service";
+
+TTITLE OFF;
 
 
 COLUMN ARTIST_INFO HEADING 'ARTIST |INFO';
@@ -48,11 +51,6 @@ COLUMN SONG_ALBUM_POSITION HEADING 'SONG |ALBUM |POSITION';
 
 COLUMN ALBUM_ID HEADING 'ALBUM |ID';
 
---COLUMN SONG_TITLE FORMAT A10 WRAP;
-
---COLUMN SONG_GENRE FORMAT A15 WRAP;
-
---COLUMN SONG_GENRE FORMAT A6 WRAP;
 
 SELECT * FROM SONG;
 
@@ -103,6 +101,16 @@ from 		song
 where		song_plays = (	
 							select max(song_plays)
 							from song);
+
+--- User Interaction / Prompts
+
+ACCEPT vDotify_Song PROMPT 'Please enter a song to play: ';
+
+PROMPT Thank you!
+
+SELECT  'Now playing: ', SONG_TITLE
+FROM ARTIST JOIN RELEASE USING (ARTIST_ID) JOIN ALBUM USING (ALBUM_ID) JOIN SONG USING (ALBUM_ID)
+WHERE SONG_TITLE = '&vDotify_song';
 
 
 
