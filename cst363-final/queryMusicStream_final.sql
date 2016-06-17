@@ -57,14 +57,14 @@ SELECT * FROM SONG;
 
 -- Album Track Listing by Release Date
 select 		song_title as "Song", album_title as "Album", CAST(FLOOR(song_time_sec / 60) AS VARCHAR2(2)) || ':' || 
-			SUBSTR('0' || CAST(MOD(song_time_sec, 60) AS VARCHAR2(2)), -2, 2) as "Duration", album_us_release_date as "Release Date"
+			SUBSTR('0' || CAST(MOD(song_time_sec, 60) AS VARCHAR2(2)), -2, 2) as "Time", album_us_release_date as "Released"
 from 		song, album 
 where 		song.album_id = album.album_id 
 order by 	album_us_release_date, song.album_id, song_album_position;
 
 
 --"Classic" Rock, release date > 25 years
-select 		song_title as "Song", album_title as "Album", album_us_release_date as "Release Date", FLOOR((sysdate - album_us_release_date)/365) as "Age"
+select 		song_title as "Song", album_title as "Album", album_us_release_date as "Released", FLOOR((sysdate - album_us_release_date)/365) as "Age"
 from 		song, album 
 where 		song.album_id = album.album_id
 and			(sysdate - album_us_release_date) > (365 * 25)
