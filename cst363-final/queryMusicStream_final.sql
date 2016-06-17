@@ -17,5 +17,41 @@ COLUMN ARTIST_INFO HEADING 'Artist |Information';
 COLUMN ARTIST_INFO FORMAT A20 WRAP;
 SELECT * FROM ARTIST;
 
+
+-- Album Track Listing by Release Date
+--select 	song_title as "Song", album_title as "Album", SUBSTR('0' + CAST(FLOOR(song_time_sec / 60) AS VARCHAR2), -2, 2) + ':' + 
+--			SUBSTR('0' + CAST(MOD(song_time_sec, 60) AS VARCHAR2), -2, 2) as "Duration", album_us_release_date as "Release Date"
+select 		song_title as "Song", album_title as "Album", album_us_release_date as "Release Date"
+from 		song, album 
+where 		song.album_id = album.album_id 
+order by 	album_us_release_date, song.album_id, song_album_position;
+
+
+-- "Classic" Rock, release date > 25 years
+--select 		song_title as "Song", album_title as "Album", album_us_release_date as "Release Date"
+--from 		song, album 
+--where 		song.album_id = album.album_id	
+--order by 	album_us_release_date, song.album_id, song_album_position;
+
+-- Show Playlists
+select 		subscriber_email, playlist_name
+from 		subscriber, subscription, playlist 
+where 		subscriber.subscriber_id = subscription.subscriber_id 
+and 		subscription.playlist_id = playlist.playlist_id;
+
+-- Show Playlist Songs
+select 		subscriber_email, playlist_name, artist_name, song_title
+from 		subscriber, subscription, playlist, playlist_entry, song, album, release, artist
+where 		subscriber.subscriber_id = subscription.subscriber_id 
+and 		subscription.playlist_id = playlist.playlist_id
+and			playlist.playlist_id = playlist_entry.playlist_id
+and			playlist_entry.song_id = song.song_id
+and			song.album_id = album.album_id
+and			album.album_id = release.album_id
+and			release.artist_id = artist.artist_id
+order by	subscriber_email, playlist_entry.playlist_id, playlist_entry.playlist_entry_position;
+
+
+
 SPOOL OFF
 
