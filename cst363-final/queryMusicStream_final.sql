@@ -7,6 +7,7 @@ SPOOL C:\Users\wwebster\Desktop\Mod3\JoeS\CSUMB\cst363-final\queryMusicStream_fi
   Class: CST363
   Final Project: Query Music Streaming DB Entities
   Instructor: Dr. Wendy Wang
+  Examples of multiple ways of generating queries and formatting output
 */
 
 set linesize 255
