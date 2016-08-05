@@ -49,6 +49,98 @@
 	    return $stmt->fetchAll();
 	}
 	
+	if (isset($_POST['addMovie'])) { //checks whether we're coming from "add movie" form
+	
+		// need more logic here to check if fields are actually set
+		$sql = "INSERT INTO `Z_Movies` (`title`, `year`, `description`, `rating`, `length`) VALUES
+				(:title, :year, :description, :rating, :length)";
+		$stmt = $dbConn -> prepare($sql);
+		
+		try {
+			$stmt -> execute(array(":title"=>$_POST['movieTitle'],
+							   	   ":year"=>$_POST['movieYear'],
+							   	   ":description"=>$_POST['movieDesc'],
+								   ":rating"=>$_POST['movieRating'],
+								   ":length"=>$_POST['movieLength']));
+								   	 				
+			echo "<br>RECORD Added!! <br> <br>"; 
+
+		} catch (PDOException $e) {
+   			if ($e->errorInfo[1] == 1062) {
+      			echo "<br>That movie already exists.";
+   			} else {
+      			echo "<br>An error occured.";
+				echo $e;
+   			}
+		}
+	}
+	
+	if (isset($_POST['addGenre'])) { //checks whether we're coming from "add genre" form
+	
+		// need more logic here to check if fields are actually set
+		$sql = "INSERT INTO `Z_Genres` (`name`) VALUES
+				(:name)";
+		$stmt = $dbConn -> prepare($sql);
+		
+		try {
+			$stmt -> execute(array(":name"=>$_POST['genreName']));
+								   	 				
+			echo "<br>RECORD Added!! <br> <br>"; 
+
+		} catch (PDOException $e) {
+   			if ($e->errorInfo[1] == 1062) {
+      			echo "<br>That genre already exists.";
+   			} else {
+      			echo "<br>An error occured.";
+				echo $e;
+   			}
+		}
+	}
+	
+	if (isset($_POST['addAsset'])) { //checks whether we're coming from "add asset" form
+	
+		// need more logic here to check if fields are actually set
+		$sql = "INSERT INTO `Z_Assets` (`name`) VALUES
+				(:name)";
+		$stmt = $dbConn -> prepare($sql);
+		
+		try {
+			$stmt -> execute(array(":name"=>$_POST['assetName']));
+								   	 				
+			echo "<br>RECORD Added!! <br> <br>"; 
+
+		} catch (PDOException $e) {
+   			if ($e->errorInfo[1] == 1062) {
+      			echo "<br>That asset already exists.";
+   			} else {
+      			echo "<br>An error occured.";
+				echo $e;
+   			}
+		}
+	}
+	
+	if (isset($_POST['addRole'])) { //checks whether we're coming from "add role" form
+	
+		// need more logic here to check if fields are actually set
+		$sql = "INSERT INTO `Z_Roles` (`name`) VALUES
+				(:name)";
+		$stmt = $dbConn -> prepare($sql);
+		
+		try {
+			$stmt -> execute(array(":name"=>$_POST['roleName']));
+								   	 				
+			echo "<br>RECORD Added!! <br> <br>"; 
+
+		} catch (PDOException $e) {
+   			if ($e->errorInfo[1] == 1062) {
+      			echo "<br>That role already exists.";
+   			} else {
+      			echo "<br>An error occured.";
+				echo $e;
+   			}
+		}
+	}
+	
 	if (isset($_POST['assignGenre'])) { //checks whether we're coming from "assign Genre" form
 	
 		$sql = "INSERT INTO `Z_Movie_Genres` (`movie_id`, `genre_id`) 
@@ -67,6 +159,7 @@
       			echo "<br>That movie has already been assigned that genre, please make a different selection.";
    			} else {
       			echo "<br>An error occured.";
+				echo $e;
    			}
 		}
 	}
@@ -83,7 +176,7 @@
 								   ":assetId"=>$_POST['asset'],
 							   	   ":roleId"=>$_POST['role']));
 								   	 				
-			echo "RECORD UPDATED!! <br> <br>"; 
+			echo "RECORD UPDATED!! <br> <br>";
 
 		} catch (PDOException $e) {
    			if ($e->errorInfo[1] == 1062) {
@@ -91,8 +184,9 @@
    			} else {
       			echo "<br>An error occured.";
    			}
-		}
+		}		
 	}
+	
 ?>
 
 <!DOCTYPE html>
@@ -104,7 +198,7 @@
 		Remove this if you use the .htaccess -->
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		
-		<title>updateStadium</title>
+		<title>StreamFlix Categorize Page</title>
 		<meta name="description" content="">
 		<meta name="author" content="lara4594">
 		
@@ -117,6 +211,86 @@
 	
 	<body>
 		<div>
+			
+			<h2>Add Movie</h2>
+			<form method="post">
+				<table>
+					<tr>
+						<td>Title</td>
+						<td><input type='text' name='movieTitle'></td>
+					</tr>
+					<tr>
+						<td>Year Released</td>
+						<td><input type='number' name='movieYear'></td>
+					</tr>
+					<tr>
+						<td>Description</td>
+						<td><textarea rows="5" cols="40" name='movieDesc' placeholder='Enter a brief description of the movie here.'></textarea></td>
+					</tr>
+					<tr>
+						<td>Rating</td>
+						<td><input type='text' name='movieRating'></td>
+					</tr>
+					<tr>
+						<td>Length (min)</td>
+						<td><input type='number' name='movieLength'></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>
+							<input type="submit" name='addMovie' value="Add Movie"> 
+						</td>
+					</tr>					
+				</table>
+			</form>
+			
+			<h2>Add Genre</h2>
+			<form method="post">
+				<table>
+					<tr>
+						<td>Name</td>
+						<td><input type='text' name='genreName'></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>
+							<input type="submit" name='addGenre' value="Add Genre"> 
+						</td>
+					</tr>
+				</table>
+			</form>
+			
+			<h2>Add Asset</h2>
+			<form method="post">
+				<table>
+					<tr>
+						<td>Name</td>
+						<td><input type='text' name='assetName'></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>
+							<input type="submit" name='addAsset' value="Add Asset"> 
+						</td>
+					</tr>
+				</table>
+			</form>
+			
+			<h2>Add Role</h2>
+			<form method="post">
+				<table>
+					<tr>
+						<td>Name</td>
+						<td><input type='text' name='roleName'></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>
+							<input type="submit" name='addRole' value="Add Role"> 
+						</td>
+					</tr>
+				</table>
+			</form>
 
 			<h2>Assign a Genre to a Movie</h2>
 			<form method="post">
