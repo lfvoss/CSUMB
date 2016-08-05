@@ -1,0 +1,101 @@
+<?php
+	//The following code assumes you are connected to the database
+    
+    //Update later so it narrows down table after each true isset
+    //Alter the following depending on what attributes we want from the tables
+    if(isset($_GET['title']))
+	{
+		$title = $_GET['key'];
+		echo "Filtering based on title...</br>";
+		$sql = 	"SELECT title, year, name
+				FROM z_movies, z_genres
+				WHERE title = $title";
+	}
+	if(isset($_GET['genre']))
+	{
+		$genre = $_GET['genre'];
+		switch($genre)
+		{
+			case 'Sci-fi':	echo "Selecting all Sci-fi films...</br>";
+							$sql = "SELECT title, year, name
+									FROM z_movies, z_genres
+									WHERE name = 'Science Fiction'";
+							break;
+			case 'Noir':	echo "Selecting all Noir films...";
+							$sql = "SELECT title, year, name
+									FROM z_movies, z_genres
+									WHERE name = 'Film Noir'";
+							break;
+			case 'Action':	echo "Selecting all Action films...";
+							$sql = "SELECT title, year, name
+									FROM z_movies, z_genres
+									WHERE name = 'Action'";
+							break;
+			//Add more cases along with more genres
+			default:
+							break;
+		}
+	}
+	if(isset($_GET['actor']))
+	{
+		echo "Filtering based on actor...";
+		$actor = $_GET['name'];
+		$sql = 	"SELECT title, year, name
+				FROM z_movies, z_assets
+				WHERE name = $actor";
+	}
+
+	/*$stmt = $dbConn -> prepare($sql); //prepares a statement for execution and returns a statement object
+	$stmt -> execute(); //execute the prepared statement
+	$movies = $stmt->fetchAll(); //store the obtained data into an array variable*/
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+
+		<!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
+		Remove this if you use the .htaccess -->
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+		<title>HTML</title>
+		<meta name="description" content="">
+		<meta name="author" content="Cian">
+
+		<meta name="viewport" content="width=device-width; initial-scale=1.0">
+
+		<!-- Replace favicon.ico & apple-touch-icon.png in the root of your domain and delete these references -->
+		<link rel="shortcut icon" href="/favicon.ico">
+		<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+	</head>
+
+	<body>
+		<div>
+			<h1>Filters:</h1>
+			</br>
+			<form method = "get">
+				Filter by title?<input type="radio" name="title"> Yes
+				</br>
+				Then enter a keyword in the movie's title:</br>
+				<input type="text" name="key">
+				</br></br>
+				Select genre:</br>
+				<input type="radio" name="genre" value="Sci-fi"> Sci-fi		<!--Search for value "Science Fiction"-->
+				<input type="radio" name="genre" value="Noir"> Noir			<!--Search for value "Film Noir"-->
+				<input type="radio" name="genre" value="Action"> Action		<!--Search for value "Action"-->
+				<!--Add more radio buttons as more z_genres are added-->
+				</br></br>
+				Filter by actor?<input type="radio" name="actor"> Yes
+				</br>
+				Then type an actor's name:</br>
+				<input type="text" name="name">
+				</br></br>
+				<input type="submit" value="Filter">
+				<?php
+					//Here will be where the data will be outputted after filtering
+				?>
+			</form>
+		</div>
+	</body>
+</html>
