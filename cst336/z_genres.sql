@@ -1,4 +1,4 @@
-INSERT INTO `Z_Genres` (`name`) VALUES
+INSERT IGNORE INTO `Z_Genres` (`name`) VALUES
 ('Science-Fiction'),
 ('Film Noir'),
 ('Action'),

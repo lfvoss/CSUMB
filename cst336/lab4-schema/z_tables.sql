@@ -173,6 +173,11 @@ ALTER TABLE `Z_Movie_Genres`
   ADD CONSTRAINT `Z_Movie_Genres_ibfk_1` FOREIGN KEY (`movie_id`) REFERENCES `Z_Movies` (`movie_id`),
   ADD CONSTRAINT `Z_Movie_Genres_ibfk_2` FOREIGN KEY (`genre_id`) REFERENCES `Z_Genres` (`genre_id`);
 
+alter table `Z_Assets` add unique (`name`);
+alter table `Z_Genres` add unique (`name`);
+alter table `Z_Roles` add unique (`name`);
+alter table `Z_Movies` add unique (`title`);
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

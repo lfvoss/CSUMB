@@ -1,4 +1,4 @@
-INSERT INTO `Z_Assets` (`name`) VALUES 
+INSERT IGNORE INTO `Z_Assets` (`name`) VALUES 
 ('Ridley Scott'),
 ('Harrison Ford'),
 ('Rutger Hauer'),
