@@ -1,18 +1,18 @@
 <?php
 	require '../db_connection.php';
 	
-	function getMovies(){
+	function getMovie($id){
 	    global $dbConn;
 	    
-	    $sql = "SELECT movie_id, title, year, rating, length
+	    $sql = "SELECT *
 	            FROM Z_Movies
-	            ORDER BY title";
+	            WHERE movie_id = :id";
 	    $stmt = $dbConn -> prepare($sql);
-	    $stmt -> execute();
+		$stmt -> execute(array(":id"=>$_GET['movie_id']));
 		
+		//implement better error handling here, best option likely try/catch above
 	    return $stmt->fetchAll();
 	}
-	
 ?>
 
 <!DOCTYPE html>
@@ -24,7 +24,7 @@
 		Remove this if you use the .htaccess -->
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		
-		<title>StreamFlix Main Page</title>
+		<title>StreamFlix Movie Detail Page</title>
 		<meta name="description" content="">
 		<meta name="author" content="lara4594">
 		
@@ -37,33 +37,20 @@
 	
 	<body>
 		<div>
-			
-			<table>
-				<tr>
-					<th>Movie</th>
-					<th>Year</th>
-					<th>Rating</th>
-					<th>Length</th>
-				</tr>
-				<?php
-					$movies = getMovies();
-
-					foreach($movies as $movie)
+			<?php
+				if (isset($_GET['movie_id'])) { //checks whether we're coming from "add movie" form
+					$result = getMovie($_GET['movie_id']);
+					
+					if(!empty($result))
 					{
+						$movie = array_shift($result);
+											
+						echo "<h1>" . $movie['title'] . "</h1>";
+						echo "<h2>" . $movie['description'] . "</h2>";
 						
-						echo "<tr>";
-						echo "<td>";
-						echo "<a href='streamflix_detail.php?movie_id=" . $movie['movie_id'] . "'>" . $movie['title'] . "</a>";
-						echo "</td>";
-						echo "<td>" . $movie['year'] . "</td>";
-						echo "<td>" . $movie['rating'] . "</td>";
-						echo "<td>" . $movie['length'] . "</td>";
-						echo "</tr>";
-						echo "</a>";
-					}	
-				?>
-			</table>
-			
+					}
+				}
+			?>
 		</div>
 	</body>
 </html>
