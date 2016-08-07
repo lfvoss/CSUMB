@@ -8,4 +8,9 @@ INSERT IGNORE INTO `Z_Genres` (`name`) VALUES
 ('Adventure'),
 ('Crime'),
 ('Horror'),
-('Mystery');
+('Mystery'),
+('Silent'),
+('Comedy'),
+('Family'),
+('Animated'),
+('Musical');
