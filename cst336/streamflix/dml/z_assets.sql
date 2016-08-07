@@ -15,5 +15,21 @@ INSERT IGNORE INTO `Z_Assets` (`name`) VALUES
 ('Marlon Brando'),
 ('Eva Marie-Saint'),
 ('Alfred Hitchcock'),
-('Tippi Hedren');
+('Tippi Hedren'),
+('Charlie Chaplin'),
+('Paulette Goddard'),
+('Jack Oakie'),
+('Jean Vigo'),
+('Dita Parlo'),
+('Jean Dasté'),
+('Michel Simon'),
+('Jennifer Lee'),
+('Chris Buck'),
+('Kristen Bell'),
+('Idina Menzel'),
+('Jonathan Groff'),
+('Hayao Miyazaki'),
+('Hitoshi Takagi'),
+('Noriko Hidaka'),
+('Chika Sakamoto');
 
