@@ -158,9 +158,30 @@
 
 	}
 	
-	/*!TODO CGP-4, add a sort, e.g. ORDER BY statement, to the existing SQL statement here
-	 *		for now we'll just apply a default sort order by movie title
-	 */
+	if(isset($_GET['sort']) and isset($_GET['AD']))
+	{
+		$sort = $_GET['sort'];
+		switch($sort)
+		{
+			case 'title':	$sql = 	"SELECT movie_id, title, year, rating, length
+									FROM z_movies
+									ORDER BY title";
+							break;
+			case 'year':	$sql = 	"SELECT movie_id, title, year, rating, length
+									FROM z_movies
+									ORDER BY year";
+							break;
+			default:		
+							break;
+		}
+		$AD = $_GET['AD'];
+		if($AD == 'descending')
+		{
+			$sql .= " DESC";
+		}
+		//By default, it should sort in ascending, so an else-statement is unnecessary
+		$sql .= ";";
+	}
 
 	echo "<br><br>Executing following SQL statement:<br>";
 	echo "$sql" . "<br><br>";
@@ -246,6 +267,20 @@
 				<?php
 					//Here will be where the data will be outputted after filtering
 				?>
+			</form>
+			<h1>Sorter</h1>
+			<h3>Please be sure to select from both options for the sorter to function.</h3>
+			<form method="get">
+				Sort data by ascending or descending order?</br>
+				<input type="radio" name="AD" value="ascending"> Ascending		<!--Sorts in ascending order-->
+				<input type="radio" name="AD" value="descending"> Descending	<!--Sorts in descending order-->
+				</br></br>
+				How would you like to sort the data?</br>
+				<input type="radio" name="sort" value="title"> Movie Title
+				<input type="radio" name="sort" value="year"> Year of Release
+				<!--Any other options to sort by needed?-->
+				</br></br>
+				<input type="submit" value="Sort!">
 			</form>
 		</div>
 	</body>
