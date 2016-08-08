@@ -7,8 +7,8 @@
 	{
 		$title = $_GET['key'];
 		echo "Filtering based on title...</br>";
-		$sql = "SELECT title, year, name
-				FROM z_movies, z_genres
+		$sql = "SELECT title, year, z_genres.name, z_assets.name
+				FROM z_movies, z_genres, z_assets
 				WHERE title = '$title'";
 	}
 	if(isset($_GET['genre']))
@@ -19,54 +19,54 @@
 			switch($genre)
 			{
 				case 'Sci-fi':	echo "Selecting all Sci-fi films...</br>";
-								$sql = "SELECT title, year, name
-										FROM z_movies, z_genres
-										WHERE name = 'Science Fiction'";
+								$sql = "SELECT title, year, z_genres.name, z_assets.name
+										FROM z_movies, z_genres, z_assets
+										WHERE z_genres.name = 'Science Fiction'";
 								break;
 				case 'Noir':	echo "Selecting all Noir films...</br>";
-								$sql = "SELECT title, year, name
-										FROM z_movies, z_genres
-										WHERE name = 'Film Noir'";
+								$sql = "SELECT title, year, z_genres.name, z_assets.name
+										FROM z_movies, z_genres, z_assets
+										WHERE z_genres.name = 'Film Noir'";
 								break;
 				case 'Action':	echo "Selecting all Action films...</br>";
-								$sql = "SELECT title, year, name
-										FROM z_movies, z_genres
-										WHERE name = 'Action'";
+								$sql = "SELECT title, year, z_genres.name, z_assets.name
+										FROM z_movies, z_genres, z_assets
+										WHERE z_genres.name = 'Action'";
 								break;
 				case 'Drama':	echo "Selecting all Drama films...</br>";
-								$sql = "SELECT title, year, name
-										FROM z_movies, z_genres
-										WHERE name = 'Drama'";
+								$sql = "SELECT title, year, z_genres.name, z_assets.name
+										FROM z_movies, z_genres, z_assets
+										WHERE z_genres.name = 'Drama'";
 								break;
 				case 'Romance':	echo "Selecting all Romance films...</br>";
-								$sql = "SELECT title, year, name
-										FROM z_movies, z_genres
-										WHERE name = 'Romance'";
+								$sql = "SELECT title, year, z_genres.name, z_assets.name
+										FROM z_movies, z_genres, z_assets
+										WHERE z_genres.name = 'Romance'";
 								break;
 				case 'War':	echo "Selecting all War films...</br>";
-								$sql = "SELECT title, year, name
-										FROM z_movies, z_genres
-										WHERE name = 'War'";
+								$sql = "SELECT title, year, z_genres.name, z_assets.name
+										FROM z_movies, z_genres, z_assets
+										WHERE z_genres.name = 'War'";
 								break;
 				case 'Adventure':	echo "Selecting all Adventure films...</br>";
-								$sql = "SELECT title, year, name
-										FROM z_movies, z_genres
-										WHERE name = 'Adventure'";
+								$sql = "SELECT title, year, z_genres.name, z_assets.name
+										FROM z_movies, z_genres, z_assets
+										WHERE z_genres.name = 'Adventure'";
 								break;
 				case 'Crime':	echo "Selecting all Crime films...</br>";
-								$sql = "SELECT title, year, name
-										FROM z_movies, z_genres
-										WHERE name = 'Crime'";
+								$sql = "SELECT title, year, z_genres.name, z_assets.name
+										FROM z_movies, z_genres, z_assets
+										WHERE z_genres.name = 'Crime'";
 								break;
 				case 'Horror':	echo "Selecting all Horror films...</br>";
-								$sql = "SELECT title, year, name
-										FROM z_movies, z_genres
-										WHERE name = 'Horror'";
+								$sql = "SELECT title, year, z_genres.name, z_assets.name
+										FROM z_movies, z_genres, z_assets
+										WHERE z_genres.name = 'Horror'";
 								break;
 				case 'Mystery':	echo "Selecting all Mystery films...</br>";
-								$sql = "SELECT title, year, name
-										FROM z_movies, z_genres
-										WHERE name = 'Mystery'";
+								$sql = "SELECT title, year, z_genres.name, z_assets.name
+										FROM z_movies, z_genres, z_assets
+										WHERE z_genres.name = 'Mystery'";
 								break;
 				//Add more cases along with more genres
 				default:
@@ -79,34 +79,34 @@
 			switch($genre)
 			{
 				case 'Sci-fi':	echo "Selecting all Sci-fi films...</br>";
-								$sql .= " AND name = 'Science Fiction'";
+								$sql .= " AND z_genres.name = 'Science Fiction'";
 								break;
 				case 'Noir':	echo "Selecting all Noir films...</br>";
-								$sql .= " AND name = 'Film Noir'";
+								$sql .= " AND z_genres.name = 'Film Noir'";
 								break;
 				case 'Action':	echo "Selecting all Action films...</br>";
-								$sql .= " AND name = 'Action'";
+								$sql .= " AND z_genres.name = 'Action'";
 								break;
 				case 'Drama':	echo "Selecting all Drama films...</br>";
-								$sql .= " AND name = 'Drama'";
+								$sql .= " AND z_genres.name = 'Drama'";
 								break;
 				case 'Romance':	echo "Selecting all Romance films...</br>";
-								$sql .= " AND name = 'Romance'";
+								$sql .= " AND z_genres.name = 'Romance'";
 								break;
 				case 'War':	echo "Selecting all War films...</br>";
-								$sql .= " AND name = 'War'";
+								$sql .= " AND z_genres.name = 'War'";
 								break;
 				case 'Adventure':	echo "Selecting all Adventure films...</br>";
-								$sql .= " AND name = 'Adventure'";
+								$sql .= " AND z_genres.name = 'Adventure'";
 								break;
 				case 'Crime':	echo "Selecting all Crime films...</br>";
-								$sql .= " AND name = 'Crime'";
+								$sql .= " AND z_genres.name = 'Crime'";
 								break;
 				case 'Horror':	echo "Selecting all Horror films...</br>";
-								$sql .= " AND name = 'Horror'";
+								$sql .= " AND z_genres.name = 'Horror'";
 								break;
 				case 'Mystery':	echo "Selecting all Mystery films...</br>";
-								$sql .= " AND name = 'Mystery'";
+								$sql .= " AND z_genres.name = 'Mystery'";
 								break;
 				//Add more cases along with more genres
 				default:
@@ -120,18 +120,18 @@
 		{
 			echo "Filtering based on actor...</br>";
 			$actor = $_GET['name'];
-			$sql = 	"SELECT title, year, name
-					FROM z_movies, z_assets
-					WHERE name = '$actor'";
+			$sql = 	"SELECT title, year, z_genres.name, z_assets.name
+					FROM z_movies, z_genres, z_assets
+					WHERE z_assets.name = '$actor'";
 		}
 		else
 		{
 			echo "Filtering based on actor...</br>";
 			$actor = $_GET['name'];
-			$sql .= " AND name = '$actor'";
+			$sql .= " AND z_assets.name = '$actor'";
 		}
 	}
-	$sql.=";";
+	$sql .= ";";
 	echo "$sql";
 	/*$stmt = $dbConn -> prepare($sql); //prepares a statement for execution and returns a statement object
 	$stmt -> execute(); //execute the prepared statement
