@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Aug 07, 2016 at 04:46 PM
+-- Generation Time: Aug 07, 2016 at 05:03 PM
 -- Server version: 5.5.31-cll
 -- PHP Version: 5.3.3
 
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `Z_Assets` (
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`asset_id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=139 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=156 ;
 
 --
 -- Dumping data for table `Z_Assets`
@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS `Z_Assets` (
 INSERT INTO `Z_Assets` (`asset_id`, `name`) VALUES
 (135, 'Albert Brooks'),
 (16, 'Alfred Hitchcock'),
+(152, 'Bill Pullman'),
 (29, 'Carrie-Anne Moss'),
 (6, 'Cate Blanchett'),
 (36, 'Charlie Chaplin'),
@@ -42,46 +43,62 @@ INSERT INTO `Z_Assets` (`asset_id`, `name`) VALUES
 (5, 'Daniel Day-Lewis'),
 (9, 'David Lean'),
 (40, 'Dita Parlo'),
+(140, 'Ed Harris'),
 (13, 'Elia Kazan'),
 (26, 'Ethan Coen'),
 (15, 'Eva Marie-Saint'),
+(148, 'Gabriel Jarret'),
 (2, 'Harrison Ford'),
 (48, 'Hayao Miyazaki'),
 (49, 'Hitoshi Takagi'),
 (30, 'Hugo Weaving'),
 (46, 'Idina Menzel'),
 (38, 'Jack Oakie'),
+(139, 'James Cameron'),
 (41, 'Jean Dasté'),
 (39, 'Jean Vigo'),
 (22, 'Jeff Bridges'),
+(155, 'Jeff Daniels'),
+(153, 'Jeff Goldblum'),
 (43, 'Jennifer Lee'),
+(154, 'Jessica Chastain'),
 (25, 'Joel Coen'),
 (23, 'John Goodman'),
 (47, 'Jonathan Groff'),
 (24, 'Julianne Moore'),
 (10, 'Julie Christie'),
+(143, 'Kathryn Bigelow'),
 (27, 'Keanu Reeves'),
 (45, 'Kristen Bell'),
 (31, 'Lana Wachowski'),
 (28, 'Laurence Fishburne'),
 (138, 'Lee Grant'),
 (32, 'Lilly Wachowski'),
+(145, 'Lori Petty'),
 (14, 'Marlon Brando'),
+(146, 'Martha Coolidge'),
+(141, 'Mary Elizabeth Mastrantonio'),
 (35, 'Matt Damon'),
 (33, 'Mel Gibson'),
 (137, 'Meryl Streep'),
+(142, 'Michael Biehn'),
 (11, 'Michael Mann'),
 (42, 'Michel Simon'),
+(149, 'Michelle Meyrink'),
 (50, 'Noriko Hidaka'),
 (8, 'Omar Shariff'),
+(144, 'Patrick Swayze'),
 (37, 'Paulette Goddard'),
 (1, 'Ridley Scott'),
 (136, 'Rip Torn'),
 (7, 'Rod Steiger'),
+(150, 'Roland Emmerich'),
 (3, 'Rutger Hauer'),
 (4, 'Sean Young'),
 (34, 'Sophie Marceau'),
 (17, 'Tippi Hedren'),
+(147, 'Val Kilmer'),
+(151, 'Will Smith'),
 (12, 'Woody Allen');
 
 -- --------------------------------------------------------
@@ -183,6 +200,7 @@ CREATE TABLE IF NOT EXISTS `Z_Movie_Assets` (
 
 INSERT INTO `Z_Movie_Assets` (`movie_id`, `asset_id`, `role_id`) VALUES
 (1, 1, 1),
+(23, 1, 1),
 (1, 2, 2),
 (1, 3, 2),
 (1, 4, 2),
@@ -207,6 +225,7 @@ INSERT INTO `Z_Movie_Assets` (`movie_id`, `asset_id`, `role_id`) VALUES
 (17, 25, 1),
 (14, 26, 1),
 (17, 26, 1),
+(5, 27, 2),
 (15, 27, 2),
 (15, 28, 2),
 (15, 29, 2),
@@ -217,6 +236,7 @@ INSERT INTO `Z_Movie_Assets` (`movie_id`, `asset_id`, `role_id`) VALUES
 (16, 33, 2),
 (16, 34, 2),
 (17, 35, 2),
+(23, 35, 2),
 (24, 36, 1),
 (24, 36, 2),
 (24, 37, 2),
@@ -237,7 +257,25 @@ INSERT INTO `Z_Movie_Assets` (`movie_id`, `asset_id`, `role_id`) VALUES
 (18, 135, 1),
 (18, 135, 2),
 (18, 136, 2),
-(18, 137, 2);
+(18, 137, 2),
+(18, 138, 2),
+(19, 139, 1),
+(19, 140, 2),
+(19, 141, 2),
+(19, 142, 2),
+(20, 143, 1),
+(20, 144, 2),
+(20, 145, 2),
+(21, 146, 1),
+(21, 147, 2),
+(21, 148, 2),
+(21, 149, 2),
+(22, 150, 1),
+(22, 151, 2),
+(22, 152, 2),
+(22, 153, 2),
+(23, 154, 2),
+(23, 155, 2);
 
 -- --------------------------------------------------------
 
