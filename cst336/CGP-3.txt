@@ -131,6 +131,7 @@
 			$sql .= " AND name = '$actor'";
 		}
 	}
+	$sql.=";";
 	echo "$sql";
 	/*$stmt = $dbConn -> prepare($sql); //prepares a statement for execution and returns a statement object
 	$stmt -> execute(); //execute the prepared statement
