@@ -4,6 +4,8 @@ define('SESSION_PATH', '.sessions');
 function set_session_path() {
     session_save_path(SESSION_PATH);
 }
+
+
 function hash_sha512($pword, $salt = null) {
     /**
      * CRYPT_SHA512 wrapper that generates 96 bit salts.
@@ -46,10 +48,13 @@ function hash_sha512($pword, $salt = null) {
     $hash = crypt($pword, $salt);
     return $hash;
 }
+
+
 function hash_cmp($pword, $hash) {
     $pword_hash = hash_sha512($pword, $hash);
     return strcmp($pword_hash, $hash) == 0;
 }
+
 
 function create_users_table($dbConn) {
     $users_table_sql = <<<END_SQL
@@ -66,6 +71,8 @@ END_SQL;
 END_SQL;
     $dbConn->exec($users_table_idx_sql);
 }
+
+
 function insert_user($dbConn, $username, $password, $msg) {
     $ret = false;
     $insert_user_sql = <<<END_SQL
@@ -85,6 +92,8 @@ END_SQL;
     }
     return $ret;
 }
+
+
 function chpass_user($dbConn, $username, $password, $new_password, $msg) {
     $ret = false;
     $salt = '';
@@ -118,6 +127,8 @@ END_SQL;
     }
     return $ret;
 }
+
+
 function chk_user($dbConn, $username, $password, $pass_out = null) {
     $ret = 0;
     $user_sql = <<<"END_SQL"
@@ -146,5 +157,32 @@ END_SQL;
         $ret = false;
     }
     return $ret;
+}
+
+
+function create_log_table($dbConn)
+{
+	$log_table_sql = <<<END_SQL
+    CREATE TABLE `Z_Users_Log` (
+        log_id INT NOT NULL AUTO_INCREMENT,
+        user_id INT NOT NULL,
+        login_time TIMESTAMP NOT NULL,
+        PRIMARY KEY (log_id),
+        FOREIGN KEY (user_id)
+        	REFERENCES z_users(user_id)
+	)
+END_SQL;
+    $dbConn->exec($log_table_sql);
+}
+
+
+function create_successful_login_entry($dbConn, $username)
+{
+	$insert_log_sql = <<<END_SQL
+	INSERT INTO `Z_Users_Log` (user_id) VALUES 
+	((select user_id from z_users where username = :username))
+END_SQL;
+    $stmt = $dbConn->prepare($insert_log_sql);
+    $stmt->execute(array(":username" => $username)); 
 }
 ?>

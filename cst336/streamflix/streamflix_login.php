@@ -30,6 +30,7 @@
 	    } else {
 	        $found = chk_user($dbConn, $username, $password);
 	        if ($found) {
+	        	create_successful_login_entry($dbConn, $username);
 	            $_SESSION['username'] = $username;
 	            header('Location: streamflix.php');
 	        } else {
