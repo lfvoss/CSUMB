@@ -6,9 +6,9 @@
 		header("Location: streamflix_login.php");
 	}
 	
-	echo "<h2>Welcome to Streamflix " . $_SESSION['username'] . "!</h2><br>";
-	
 	require '../db_connection.php';
+		
+	echo "<h2>Welcome to Streamflix " . $_SESSION['username'] . "!</h2><br>";
 	
 	//debug only
 	print_r($_GET);

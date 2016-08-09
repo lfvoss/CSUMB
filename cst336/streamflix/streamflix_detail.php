@@ -1,5 +1,11 @@
 <?php
+	session_start();
+	
 	require '../db_connection.php';
+	
+	if(!isset($_SESSION['username'])){
+		header("Location: streamflix_login.php");
+	}
 	
 	function getMovie($id){
 	    global $dbConn;
