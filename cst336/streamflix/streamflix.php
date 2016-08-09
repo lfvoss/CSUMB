@@ -18,23 +18,22 @@
 	
 	if(empty($_GET))
 	{
-    	$sql = "SELECT movie_id, title, year, rating, length
+    	$sql = "SELECT Z_movies.movie_id, title, year, rating, length
                 FROM Z_Movies
                 ORDER BY title";
 	}
 	else 
-	{
-		
-		$sql = '';
-		//Alter the following depending on what attributes we want from the tables
+	{	
+	    $sql = "";
 	    if(isset($_GET['title']))
 		{
 			$title = $_GET['key'];
 			echo "Filtering based on title...</br>";
-			$sql = "SELECT movie_id, title, year, rating, length
-                	FROM Z_Movies 
-                	WHERE title like '%$title%'";
+			$sql = "SELECT Z_movies.movie_id, title, year, rating, length
+					FROM Z_Movies, Z_Genres, Z_Movie_Genres, Z_Assets, Z_Movie_Assets, Z_Roles
+					WHERE title = '$title'";
 		}
+		
 		if(isset($_GET['genre']))
 		{
 			if($sql == "")
@@ -43,54 +42,54 @@
 				switch($genre)
 				{
 					case 'Sci-fi':	echo "Selecting all Sci-fi films...</br>";
-									$sql = "SELECT movie_id, title, year, length, rating
-											FROM z_movies, z_genres
-											WHERE name = 'Science Fiction'";
+									$sql = "SELECT DISTINCT Z_movies.movie_id, title, year, rating, length
+											FROM Z_Movies, Z_Genres, Z_Movie_Genres, Z_Assets, Z_Movie_Assets, Z_Roles
+											WHERE Z_Genres.name = 'Science Fiction'";
 									break;
 					case 'Noir':	echo "Selecting all Noir films...</br>";
-									$sql = "SELECT movie_id, title, year, length, rating
-											FROM z_movies, z_genres
-											WHERE name = 'Film Noir'";
+									$sql = "SELECT DISTINCT Z_movies.movie_id, title, year, rating, length
+											FROM Z_Movies, Z_Genres, Z_Movie_Genres, Z_Assets, Z_Movie_Assets, Z_Roles
+											WHERE Z_Genres.name = 'Film Noir'";
 									break;
 					case 'Action':	echo "Selecting all Action films...</br>";
-									$sql = "SELECT movie_id, title, year, length, rating
-											FROM z_movies, z_genres
-											WHERE name = 'Action'";
+									$sql = "SELECT DISTINCT Z_movies.movie_id, title, year, rating, length
+											FROM Z_Movies, Z_Genres, Z_Movie_Genres, Z_Assets, Z_Movie_Assets, Z_Roles
+											WHERE Z_Genres.name = 'Action'";
 									break;
 					case 'Drama':	echo "Selecting all Drama films...</br>";
-									$sql = "SELECT movie_id, title, year, length, rating
-											FROM z_movies, z_genres
-											WHERE name = 'Drama'";
+									$sql = "SELECT DISTINCT Z_movies.movie_id, title, year, rating, length
+											FROM Z_Movies, Z_Genres, Z_Movie_Genres, Z_Assets, Z_Movie_Assets, Z_Roles
+											WHERE Z_Genres.name = 'Drama'";
 									break;
 					case 'Romance':	echo "Selecting all Romance films...</br>";
-									$sql = "SELECT movie_id, title, year, length, rating
-											FROM z_movies, z_genres
-											WHERE name = 'Romance'";
+									$sql = "SELECT DISTINCT Z_movies.movie_id, title, year, rating, length
+											FROM Z_Movies, Z_Genres, Z_Movie_Genres, Z_Assets, Z_Movie_Assets, Z_Roles
+											WHERE Z_Genres.name = 'Romance'";
 									break;
 					case 'War':	echo "Selecting all War films...</br>";
-									$sql = "SELECT movie_id, title, year, length, rating
-											FROM z_movies, z_genres
-											WHERE name = 'War'";
+									$sql = "SELECT DISTINCT Z_movies.movie_id, title, year, rating, length
+											FROM Z_Movies, Z_Genres, Z_Movie_Genres, Z_Assets, Z_Movie_Assets, Z_Roles
+											WHERE Z_Genres.name = 'War'";
 									break;
 					case 'Adventure':	echo "Selecting all Adventure films...</br>";
-									$sql = "SELECT movie_id, title, year, length, rating
-											FROM z_movies, z_genres
-											WHERE name = 'Adventure'";
+									$sql = "SELECT DISTINCT Z_movies.movie_id, title, year, rating, length
+											FROM Z_Movies, Z_Genres, Z_Movie_Genres, Z_Assets, Z_Movie_Assets, Z_Roles
+											WHERE Z_Genres.name = 'Adventure'";
 									break;
 					case 'Crime':	echo "Selecting all Crime films...</br>";
-									$sql = "SELECT movie_id, title, year, length, rating
-											FROM z_movies, z_genres
-											WHERE name = 'Crime'";
+									$sql = "SELECT DISTINCT Z_movies.movie_id, title, year, rating, length
+											FROM Z_Movies, Z_Genres, Z_Movie_Genres, Z_Assets, Z_Movie_Assets, Z_Roles
+											WHERE Z_Genres.name = 'Crime'";
 									break;
 					case 'Horror':	echo "Selecting all Horror films...</br>";
-									$sql = "SELECT movie_id, title, year, length, rating
-											FROM z_movies, z_genres
-											WHERE name = 'Horror'";
+									$sql = "SELECT DISTINCT Z_movies.movie_id, title, year, rating, length
+											FROM Z_Movies, Z_Genres, Z_Movie_Genres, Z_Assets, Z_Movie_Assets, Z_Roles
+											WHERE Z_Genres.name = 'Horror'";
 									break;
 					case 'Mystery':	echo "Selecting all Mystery films...</br>";
-									$sql = "SELECT movie_id, title, year, length, rating
-											FROM z_movies, z_genres
-											WHERE name = 'Mystery'";
+									$sql = "SELECT DISTINCT Z_movies.movie_id, title, year, rating, length
+											FROM Z_Movies, Z_Genres, Z_Movie_Genres, Z_Assets, Z_Movie_Assets, Z_Roles
+											WHERE Z_Genres.name = 'Mystery'";
 									break;
 					//Add more cases along with more genres
 					default:
@@ -103,34 +102,34 @@
 				switch($genre)
 				{
 					case 'Sci-fi':	echo "Selecting all Sci-fi films...</br>";
-									$sql .= " AND name = 'Science Fiction'";
+									$sql .= " AND Z_Genres.name = 'Science Fiction'";
 									break;
 					case 'Noir':	echo "Selecting all Noir films...</br>";
-									$sql .= " AND name = 'Film Noir'";
+									$sql .= " AND Z_Genres.name = 'Film Noir'";
 									break;
 					case 'Action':	echo "Selecting all Action films...</br>";
-									$sql .= " AND name = 'Action'";
+									$sql .= " AND Z_Genres.name = 'Action'";
 									break;
 					case 'Drama':	echo "Selecting all Drama films...</br>";
-									$sql .= " AND name = 'Drama'";
+									$sql .= " AND Z_Genres.name = 'Drama'";
 									break;
 					case 'Romance':	echo "Selecting all Romance films...</br>";
-									$sql .= " AND name = 'Romance'";
+									$sql .= " AND Z_Genres.name = 'Romance'";
 									break;
 					case 'War':	echo "Selecting all War films...</br>";
-									$sql .= " AND name = 'War'";
+									$sql .= " AND Z_Genres.name = 'War'";
 									break;
 					case 'Adventure':	echo "Selecting all Adventure films...</br>";
-									$sql .= " AND name = 'Adventure'";
+									$sql .= " AND Z_Genres.name = 'Adventure'";
 									break;
 					case 'Crime':	echo "Selecting all Crime films...</br>";
-									$sql .= " AND name = 'Crime'";
+									$sql .= " AND Z_Genres.name = 'Crime'";
 									break;
 					case 'Horror':	echo "Selecting all Horror films...</br>";
-									$sql .= " AND name = 'Horror'";
+									$sql .= " AND Z_Genres.name = 'Horror'";
 									break;
 					case 'Mystery':	echo "Selecting all Mystery films...</br>";
-									$sql .= " AND name = 'Mystery'";
+									$sql .= " AND Z_Genres.name = 'Mystery'";
 									break;
 					//Add more cases along with more genres
 					default:
@@ -138,36 +137,44 @@
 				}
 			}
 		}
+		
 		if(isset($_GET['actor']))
 		{
 			if($sql == "")
 			{
 				echo "Filtering based on actor...</br>";
 				$actor = $_GET['name'];
-				$sql = 	"SELECT movie_id, title, year, length, rating
-						FROM z_movies, z_assets
-						WHERE name = '$actor'";
+				$sql = 	"SELECT DISTINCT Z_movies.movie_id, title, year, rating, length
+						 FROM Z_Movies, Z_Genres, Z_Movie_Genres, Z_Assets, Z_Movie_Assets, Z_Roles
+						 WHERE Z_Assets.name = '$actor'";
 			}
 			else
 			{
 				echo "Filtering based on actor...</br>";
 				$actor = $_GET['name'];
-				$sql .= " AND name = '$actor'";
+				$sql .= " AND Z_Assets.name = '$actor'";
 			}
 		}
-
+		
+		//Finally, adds ID comparison between tables so proper data is returned
+		$sql .= 	" AND Z_Assets.asset_id = Z_Movie_Assets.asset_id
+					AND Z_Genres.genre_id = Z_Movie_Genres.genre_id
+					AND Z_Movies.movie_id = Z_Movie_Assets.movie_id;
+					AND Z_Movies.movie_id = Z_Movie_Genres.movie_id
+					AND Z_Movie_Assets.movie_id = Z_Movie_Genres.movie_id
+					AND Z_Roles.role_id = Z_Movie_Assets.role_id";
 	}
-	
+		
 	if(isset($_GET['sort']) and isset($_GET['AD']))
 	{
 		$sort = $_GET['sort'];
 		switch($sort)
 		{
-			case 'title':	$sql = 	"SELECT movie_id, title, year, rating, length
+			case 'title':	$sql = 	"SELECT Z_movies.movie_id, title, year, rating, length
 									FROM z_movies
 									ORDER BY title";
 							break;
-			case 'year':	$sql = 	"SELECT movie_id, title, year, rating, length
+			case 'year':	$sql = 	"SELECT Z_movies.movie_id, title, year, rating, length
 									FROM z_movies
 									ORDER BY year";
 							break;
