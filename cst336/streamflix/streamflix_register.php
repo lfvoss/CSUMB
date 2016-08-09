@@ -28,13 +28,14 @@
 	    if (is_null($username) || is_null($password)) {
 	        $msg[] =  "Please retry login.";
 	    } else {
-	        $found = chk_user($dbConn, $username, $password);
-	        if ($found) {
+	        $insert_msg = '';
+	        $added = insert_user($dbConn, $username, $password, &$insert_msg);
+	        if ($added) {
 	            $_SESSION['username'] = $username;
 	            header('Location: streamflix.php');
 	        } else {
 	            // fail
-	            $msg[] = "Please retry login.";
+	            $msg[] = $insert_msg;
 	        }
 	    }
 	}
@@ -44,7 +45,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Streamflix User Login</title>
+        <title>Streamflix Registration</title>
         <link rel="stylesheet" type="text/css" href="streamflix.css">
     </head>
     <body>
@@ -57,13 +58,13 @@ if (count($msg)){
 }
 ?>
             <fieldset>
-                <legend>Login:</legend>
+                <legend>Register:</legend>
                 username: <input type="text" id="name" maxlength="255" pattern="[\w\@_\.-]+"  name="username" />
                 password: <input type="password" id="password" maxlength="127" pattern="[!-~]+" name="password" /><br/>
                 <input class="submit" type="submit" name="submit" value="Submit">
             </fieldset>     
             </form>
         </header>
-        <nav><a href="streamflix_register.php">Register new user</a></nav>
+        <nav><a href="streamflix_login.php">Login</a></nav>
     </body>
 </html>
