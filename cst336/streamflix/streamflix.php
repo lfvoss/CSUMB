@@ -1,21 +1,18 @@
 <?php
+	
+	session_start();
+
+	if(!isset($_SESSION['username'])){
+		header("Location: streamflix_login.php");
+	}
+	
+	echo "<h2>Welcome to Streamflix " . $_SESSION['username'] . "!</h2><br>";
+	
 	require '../db_connection.php';
 	
+	//debug only
 	print_r($_GET);
-	
-	/* modifying original design slightly to support integration of filters
-	function getMovies(){
-	    global $dbConn;
-	    
-	    $sql = "SELECT movie_id, title, year, rating, length
-	            FROM Z_Movies
-	            ORDER BY title";
-	    $stmt = $dbConn -> prepare($sql);
-	    $stmt -> execute();
 		
-	    return $stmt->fetchAll();
-	}*/
-	
 	if(empty($_GET))
 	{
     	$sql = "SELECT Z_movies.movie_id, title, year, rating, length
@@ -219,76 +216,84 @@
 	
 	<body>
 		<div>
-			
-			<table>
-				<tr>
-					<th>Movie</th>
-					<th>Year</th>
-					<th>Rating</th>
-					<th>Length</th>
-				</tr>
-				<?php
-					//$movies = getMovies();
+			<div>
+				<form method="post" action="streamflix_logout.php">
+					<input type="submit" value="Logout" />
+				</form>
+			</div>
 
-					foreach($movies as $movie)
-					{
-						
-						echo "<tr>";
-						echo "<td>";
-						echo "<a href='streamflix_detail.php?movie_id=" . $movie['movie_id'] . "'>" . $movie['title'] . "</a>";
-						echo "</td>";
-						echo "<td>" . $movie['year'] . "</td>";
-						echo "<td>" . $movie['rating'] . "</td>";
-						echo "<td>" . $movie['length'] . "</td>";
-						echo "</tr>";
-						echo "</a>";
-					}	
-				?>
-			</table>
-			<br>
-			<form method = "get">
-				Filter by title?<input type="radio" name="title"> Yes
-				</br>
-				Then enter a keyword in the movie's title:</br>
-				<input type="text" name="key">
-				</br></br>
-				Select genre:</br>
-				<input type="radio" name="genre" value="Sci-fi"> Sci-fi			<!--Search for value "Science Fiction"-->
-				<input type="radio" name="genre" value="Noir"> Noir				<!--Search for value "Film Noir"-->
-				<input type="radio" name="genre" value="Action"> Action			<!--Search for value "Action"-->
-				<input type="radio" name="genre" value="Drama"> Drama			<!--Search for value "Drama"-->
-				<input type="radio" name="genre" value="Romance"> Romance		<!--Search for value "Romance"-->
-				<input type="radio" name="genre" value="War"> War				<!--Search for value "War"-->
-				<input type="radio" name="genre" value="Adventure"> Adventure	<!--Search for value "Adventure"-->
-				<input type="radio" name="genre" value="Crime"> Crime			<!--Search for value "Crime"-->
-				<input type="radio" name="genre" value="Horror"> Horror			<!--Search for value "Horror"-->
-				<input type="radio" name="genre" value="Mystery"> Mystery		<!--Search for value "Mystery"-->
-				<!--Add more radio buttons as more z_genres are added-->
-				</br></br>
-				Filter by actor?<input type="radio" name="actor"> Yes
-				</br>
-				Then type an actor's name:</br>
-				<input type="text" name="name">
-				</br></br>
-				<input type="submit" value="Filter">
-				<?php
-					//Here will be where the data will be outputted after filtering
-				?>
-			</form>
-			<h1>Sorter</h1>
-			<h3>Please be sure to select from both options for the sorter to function.</h3>
-			<form method="get">
-				Sort data by ascending or descending order?</br>
-				<input type="radio" name="AD" value="ascending"> Ascending		<!--Sorts in ascending order-->
-				<input type="radio" name="AD" value="descending"> Descending	<!--Sorts in descending order-->
-				</br></br>
-				How would you like to sort the data?</br>
-				<input type="radio" name="sort" value="title"> Movie Title
-				<input type="radio" name="sort" value="year"> Year of Release
-				<!--Any other options to sort by needed?-->
-				</br></br>
-				<input type="submit" value="Sort!">
-			</form>
+			<div>
+				<h1>Click on a movie for more information:</h1>
+				<table>
+					<tr>
+						<th>Movie</th>
+						<th>Year</th>
+						<th>Rating</th>
+						<th>Length</th>
+					</tr>
+					<?php
+						//$movies = getMovies();
+	
+						foreach($movies as $movie)
+						{
+							
+							echo "<tr>";
+							echo "<td>";
+							echo "<a href='streamflix_detail.php?movie_id=" . $movie['movie_id'] . "'>" . $movie['title'] . "</a>";
+							echo "</td>";
+							echo "<td>" . $movie['year'] . "</td>";
+							echo "<td>" . $movie['rating'] . "</td>";
+							echo "<td>" . $movie['length'] . "</td>";
+							echo "</tr>";
+							echo "</a>";
+						}	
+					?>
+				</table>
+				<br>
+				<form method = "get">
+					Filter by title?<input type="radio" name="title"> Yes
+					</br>
+					Then enter a keyword in the movie's title:</br>
+					<input type="text" name="key">
+					</br></br>
+					Select genre:</br>
+					<input type="radio" name="genre" value="Sci-fi"> Sci-fi			<!--Search for value "Science Fiction"-->
+					<input type="radio" name="genre" value="Noir"> Noir				<!--Search for value "Film Noir"-->
+					<input type="radio" name="genre" value="Action"> Action			<!--Search for value "Action"-->
+					<input type="radio" name="genre" value="Drama"> Drama			<!--Search for value "Drama"-->
+					<input type="radio" name="genre" value="Romance"> Romance		<!--Search for value "Romance"-->
+					<input type="radio" name="genre" value="War"> War				<!--Search for value "War"-->
+					<input type="radio" name="genre" value="Adventure"> Adventure	<!--Search for value "Adventure"-->
+					<input type="radio" name="genre" value="Crime"> Crime			<!--Search for value "Crime"-->
+					<input type="radio" name="genre" value="Horror"> Horror			<!--Search for value "Horror"-->
+					<input type="radio" name="genre" value="Mystery"> Mystery		<!--Search for value "Mystery"-->
+					<!--Add more radio buttons as more z_genres are added-->
+					</br></br>
+					Filter by actor?<input type="radio" name="actor"> Yes
+					</br>
+					Then type an actor's name:</br>
+					<input type="text" name="name">
+					</br></br>
+					<input type="submit" value="Filter">
+					<?php
+						//Here will be where the data will be outputted after filtering
+					?>
+				</form>
+				<h1>Sorter</h1>
+				<h3>Please be sure to select from both options for the sorter to function.</h3>
+				<form method="get">
+					Sort data by ascending or descending order?</br>
+					<input type="radio" name="AD" value="ascending"> Ascending		<!--Sorts in ascending order-->
+					<input type="radio" name="AD" value="descending"> Descending	<!--Sorts in descending order-->
+					</br></br>
+					How would you like to sort the data?</br>
+					<input type="radio" name="sort" value="title"> Movie Title
+					<input type="radio" name="sort" value="year"> Year of Release
+					<!--Any other options to sort by needed?-->
+					</br></br>
+					<input type="submit" value="Sort!">
+				</form>
+			</div>
 		</div>
 	</body>
 </html>
