@@ -8,9 +8,40 @@
 	            FROM Z_Movies
 	            WHERE movie_id = :id";
 	    $stmt = $dbConn -> prepare($sql);
-		$stmt -> execute(array(":id"=>$_GET['movie_id']));
+		$stmt -> execute(array(":id"=>$id));
 		
 		//implement better error handling here, best option likely try/catch above
+	    return $stmt->fetchAll();
+	}
+	
+	function getGenres($id){
+		global $dbConn;
+		
+	    $sql = "SELECT DISTINCT name
+	            FROM 	Z_Movie_Genres, Z_Genres
+	            WHERE 	Z_Movie_Genres.movie_id = :id AND
+					  	Z_Movie_Genres.genre_id = Z_Genres.genre_id";
+	    $stmt = $dbConn -> prepare($sql);
+		$stmt -> execute(array(":id"=>$id));
+		
+		//implement better error handling here, best option likely try/catch above
+	    
+	    return $stmt->fetchAll();
+	}
+	
+	function getMovieAssets($id){
+		global $dbConn;
+		
+	    $sql = "SELECT DISTINCT Z_Roles.name as role, Z_Assets.name as name
+	            FROM 	Z_Movie_Assets, Z_Roles, Z_Assets
+	            WHERE 	Z_Movie_Assets.movie_id = :id AND
+					  	Z_Movie_Assets.role_id = Z_Roles.role_id AND
+						Z_Movie_Assets.asset_id = Z_Assets.asset_id";
+	    $stmt = $dbConn -> prepare($sql);
+		$stmt -> execute(array(":id"=>$id));
+		
+		//implement better error handling here, best option likely try/catch above
+	    
 	    return $stmt->fetchAll();
 	}
 ?>
@@ -43,14 +74,41 @@
 					
 					if(!empty($result))
 					{
-						$movie = array_shift($result);
+						$movie = array_shift($result); ?>
 											
-						echo "<h1>" . $movie['title'] . "</h1>";
-						echo "<h2>" . $movie['description'] . "</h2>";
-						
-					}
-				}
-			?>
+						<h1><?php echo $movie['title'] ?></h1>
+						<h2><?php echo $movie['description'] ?></h2>
+						<table>
+							<tr>
+								<th>Year Released:</th>
+								<td><?php echo $movie['year'] ?></td>
+							</tr>
+							<tr>
+								<th>Rating:</th>
+								<td><?php echo $movie['rating'] ?></td>
+							</tr>
+							<tr>
+								<th>Running Time:</th>
+								<td><?php echo $movie['length'] ?></td>
+							</tr>
+							<tr>
+								<th>Genre:</th>
+								<?php foreach(getGenres($_GET['movie_id']) as $genre) { ?>
+									<td><?php echo $genre['name'] ?></td>	
+								<?php } ?>
+							</tr>
+						</table>
+						<h3>Contributors:</h3>
+						<table>
+							<?php foreach(getMovieAssets($_GET['movie_id']) as $asset) { ?>
+								<tr>
+									<th><?php echo $asset['role'] ?></th>
+									<td><?php echo $asset['name'] ?></td>
+								</tr>
+							<?php } ?>
+						</table>	
+					<?php } ?>
+			<?php } ?>
 		</div>
 	</body>
 </html>
