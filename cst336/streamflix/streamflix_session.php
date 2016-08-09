@@ -50,32 +50,75 @@ function hash_cmp($pword, $hash) {
     $pword_hash = hash_sha512($pword, $hash);
     return strcmp($pword_hash, $hash) == 0;
 }
+
 function create_users_table($dbConn) {
     $users_table_sql = <<<END_SQL
-	create table `Z_Users`(
-	    user_id int not null,
-	    username varchar(255) not null unique,
-	    password varchar(255) not null,
-	    primary key (user_id)
+    CREATE TABLE `Z_Users` (
+        user_id INT NOT NULL AUTO_INCREMENT,
+        username VARCHAR(255) NOT NULL UNIQUE,
+        password VARCHAR(255) NOT NULL,
+        PRIMARY KEY (user_id)
 	)
 END_SQL;
     $dbConn->exec($users_table_sql);
     $users_table_idx_sql = <<<END_SQL
-        create index Z_Users_username_idx ON Z_Users (username) using hash
+        CREATE INDEX Z_Users_username_idx ON Z_Users (username) USING HASH
 END_SQL;
     $dbConn->exec($users_table_idx_sql);
 }
-function insert_user($dbConn, $username, $password) {
+function insert_user($dbConn, $username, $password, $msg) {
+    $ret = false;
     $insert_user_sql = <<<END_SQL
 	INSERT INTO `Z_Users` (`username`, `password`)
 	VALUES
 	(:username, :password)
 END_SQL;
+
     $stmt = $dbConn->prepare($insert_user_sql);
-    $stmt->execute(array(":username" => $username,
-	":password" => hash_sha512($password)));
+    try {
+        $stmt->execute(array(":username" => $username,
+            ":password" => hash_sha512($password)));                                               
+        $msg = "Successfully created new user $username.";
+        $ret = true;
+    } catch (PDOException $e) {
+        $msg = "Failed to create a new user. Please try again. $e";
+    }
+    return $ret;
 }
-function chk_user($dbConn, $username, $password) {
+function chpass_user($dbConn, $username, $password, $new_password, $msg) {
+    $ret = false;
+    $salt = '';
+    if (chk_user($dbConn, $username, $password, &$salt)) {
+        $update_user_sql = <<<END_SQL
+        UPDATE `Z_Users`
+        SET
+            password = :new_password
+        WHERE
+            username = :username
+            AND password = :password
+END_SQL;
+
+        $stmt = $dbConn->prepare($update_user_sql);
+        try {
+            $stmt->execute(array(
+                ":new_password" => hash_sha512($new_password),
+                ":username" => $username,
+                ":password" => hash_sha512($password, $salt))
+            );
+            $count = $stmt->rowCount();
+            if ($count == 0) {
+                $msg = "Failed to update password.";
+            }else {
+                $msg = "Updated password.";
+                $ret = true;
+            }
+        } catch (PDOException $e) {
+            $msg = "Failed to update password.";
+        }
+    }
+    return $ret;
+}
+function chk_user($dbConn, $username, $password, $pass_out = null) {
     $ret = 0;
     $user_sql = <<<"END_SQL"
         SELECT
@@ -88,13 +131,20 @@ function chk_user($dbConn, $username, $password) {
         LIMIT 1
 END_SQL;
     $stmt = $dbConn->prepare($user_sql);
-    $stmt->execute(array(":username" => $username));
-    $record = $stmt->fetch();
-    /**
-     * Perform the same amount of work regardless of whether the user
-     * was found.
-     */
-    $ret = hash_cmp($password, empty($record) ? '' : $record['password']);
+    try {
+        $stmt->execute(array(":username" => $username));
+        $record = $stmt->fetch();
+        /**
+         * Perform the same amount of work regardless of whether the user
+         * was found.
+         */
+        $ret = hash_cmp($password, empty($record) ? '' : $record['password']);
+        if ($ret && !empty($record) && !is_null($pass_out)) {
+            $pass_out = $record['password'];
+        }
+    } catch (PDOException $e) {
+        $ret = false;
+    }
     return $ret;
 }
 ?>
