@@ -75,6 +75,19 @@
 		}
 	}
 	
+	if (isset($_POST['delete'])) { //checks whether the delete button was clicked
+		$sql = "DELETE FROM Z_Movie_Assets
+	            WHERE movie_id = :movie_id;
+	            DELETE FROM Z_Movie_Genres
+	            WHERE movie_id = :movie_id;
+	            DELETE FROM Z_Movies
+	            WHERE movie_id = :movie_id";
+				
+		$stmt = $dbConn -> prepare($sql);
+		$stmt -> execute( array(":movie_id"=> $_POST['movie_id']));
+		echo "Movie Deleted! <br /><br />";    
+	}
+	
 	if (isset($_POST['addGenre'])) { //checks whether we're coming from "add genre" form
 	
 		// need more logic here to check if fields are actually set
@@ -243,6 +256,26 @@
 					</tr>					
 				</table>
 			</form>
+			
+			<h2>Delete Movie</h2>
+			<?php
+				$movieList = getMovies();
+				
+			    foreach ($movieList as $movie) { ?>
+		        
+		        	<?=$movie['title']?>
+		        	<!--<form method="post">
+		            	<input type="hidden" name="movie_id" value="<?=$movie['movie_id']?>">
+		            	<input type="submit" name="update" value="Update">
+		        	</form>-->
+		        	<form method="post">
+		            	<input type="hidden" name="movie_id" value="<?=$movie['movie_id']?>">         
+		            	<input type="submit" name="delete" value="Delete">
+		        	</form>
+		        	<br>      
+				<?        
+		    	} //end foreach
+	   		?>
 			
 			<h2>Add Genre</h2>
 			<form method="post">
