@@ -77,11 +77,19 @@
 	
 	if (isset($_POST['delete'])) { //checks whether the delete button was clicked
 		$sql = "DELETE FROM Z_Movie_Assets
-	            WHERE movie_id = :movie_id;
-	            DELETE FROM Z_Movie_Genres
-	            WHERE movie_id = :movie_id;
-	            DELETE FROM Z_Movies
-	            WHERE movie_id = :movie_id";
+	            	WHERE movie_id = :movie_id";
+		
+		$stmt = $dbConn -> prepare($sql);
+		$stmt -> execute( array(":movie_id"=> $_POST['movie_id']));	            
+	            
+		$sql = "DELETE FROM Z_Movie_Genres
+	            	WHERE movie_id = :movie_id";
+		
+		$stmt = $dbConn -> prepare($sql);
+		$stmt -> execute( array(":movie_id"=> $_POST['movie_id']));	            
+	   
+	    	$sql = "DELETE FROM Z_Movies
+	        	WHERE movie_id = :movie_id";
 				
 		$stmt = $dbConn -> prepare($sql);
 		$stmt -> execute( array(":movie_id"=> $_POST['movie_id']));
